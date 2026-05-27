@@ -1079,10 +1079,10 @@ fun SuSFSConfigScreen() {
                 PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     containerColor =
-                        if (CardConfig.isCustomBackgroundEnabled)
+                        if (ThemeConfig.isEnableBlur)
                             Color.Transparent
                         else
-                            MaterialTheme.colorScheme.surfaceContainer,
+                            MaterialTheme.colorScheme.surfaceContainer.copy(CardConfig.cardAlpha),
                     edgePadding = 0.dp
                 ) {
                     SuSFSTab.entries.fastForEachIndexed { index, tab ->
