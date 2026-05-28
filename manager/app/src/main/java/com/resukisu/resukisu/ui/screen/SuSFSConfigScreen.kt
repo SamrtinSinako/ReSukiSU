@@ -112,7 +112,6 @@ import com.resukisu.resukisu.ui.theme.blurEffect
 import com.resukisu.resukisu.ui.theme.blurSource
 import com.resukisu.resukisu.ui.util.LocalSnackbarHost
 import com.resukisu.resukisu.ui.viewmodel.ConfigurableSuSFSFeature
-import com.resukisu.resukisu.ui.viewmodel.SuSFSFeatureStatus
 import com.resukisu.resukisu.ui.viewmodel.SuSFSScreenViewModel
 import com.resukisu.resukisu.ui.viewmodel.SuSFSStaticKstatEntry
 import com.resukisu.resukisu.ui.viewmodel.SuperUserViewModel
@@ -1350,13 +1349,6 @@ private fun LazyListScope.staticKstatGroup(
             }
         }
     }
-}
-
-@Composable
-private fun FeatureGroup(
-    features: List<SuSFSFeatureStatus>,
-) {
-
 }
 
 @Composable
