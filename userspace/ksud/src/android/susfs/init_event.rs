@@ -12,8 +12,8 @@ use crate::android::susfs::config;
 use crate::android::susfs::config::data::Data;
 
 const USER_0_CE_AVAILABLE_PROP: &str = "sys.user.0.ce_available";
-const CE_AVAILABLE_WAIT_TIMEOUT_SECS: u64 = 10 * 60;
-const CE_AVAILABLE_POLL_INTERVAL_SECS: u64 = 1;
+const CE_AVAILABLE_WAIT_TIMEOUT_SECS: Duration = Duration::from_secs(10);
+const CE_AVAILABLE_POLL_INTERVAL_SECS: Duration = Duration::from_secs(1);
 const USER_0_CE_PATH_PREFIXES: &[&str] = &[
     "/sdcard",
     "/storage/emulated/0",
@@ -427,9 +427,8 @@ fn wait_for_user_0_ce_available() {
     }
 
     let _ = wait_for_user_0_ce_available_inner();
-    unsafe {
-        libc::_exit(0);
-    }
+
+    std::process::exit(0);
 }
 
 fn wait_for_user_0_ce_available_inner() -> bool {
@@ -442,13 +441,11 @@ fn wait_for_user_0_ce_available_inner() -> bool {
             return true;
         }
 
-        let elapsed = started_at.elapsed();
-        if elapsed >= Duration::from_secs(CE_AVAILABLE_WAIT_TIMEOUT_SECS) {
+        if started_at.elapsed() >= CE_AVAILABLE_WAIT_TIMEOUT_SECS {
             warn!("timed out waiting for user 0 CE availability");
             return false;
         }
 
-        let remaining = Duration::from_secs(CE_AVAILABLE_WAIT_TIMEOUT_SECS).saturating_sub(elapsed);
-        thread::sleep(remaining.min(Duration::from_secs(CE_AVAILABLE_POLL_INTERVAL_SECS)));
+        thread::sleep(CE_AVAILABLE_POLL_INTERVAL_SECS);
     }
 }
