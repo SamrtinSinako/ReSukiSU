@@ -320,7 +320,6 @@ clean:
 #ifdef CONFIG_KSU_DEBUG
         pr_err("Unexpected v3 signature scheme found!\n");
 #endif
-        return false;
     }
 
     if (v2_signing_valid) {
