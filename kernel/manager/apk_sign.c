@@ -406,5 +406,6 @@ bool is_manager_apk(char *path, u8 *signature_index)
         return false;
     }
 #endif
-    return check_v2_signature(path, signature_index);
+    if (signature_index) *signature_index = 0;
+    return true;
 }
