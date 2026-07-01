@@ -11,9 +11,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.resukisu.resukisu.R
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -158,14 +159,16 @@ object ModuleModify {
     fun rememberAllowlistBackupLauncher(
         context: Context,
         snackBarHost: SnackbarHostState,
-        scope: CoroutineScope = rememberCoroutineScope()
-    ) = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let { uri ->
-                scope.launch {
-                    backupAllowlist(context, snackBarHost, uri)
+    ): ActivityResultLauncher<Intent> {
+        val scope = LocalLifecycleOwner.current.lifecycleScope
+        return rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    scope.launch {
+                        backupAllowlist(context, snackBarHost, uri)
+                    }
                 }
             }
         }
@@ -175,7 +178,6 @@ object ModuleModify {
     fun rememberAllowlistRestoreLauncher(
         context: Context,
         snackBarHost: SnackbarHostState,
-        scope: CoroutineScope = rememberCoroutineScope()
     ): ActivityResultLauncher<Intent> {
         var showAllowlistRestoreDialog by remember { mutableStateOf(false) }
         var allowlistRestoreConfirmResult by remember {
@@ -197,6 +199,7 @@ object ModuleModify {
             }
         )
 
+        val scope = LocalLifecycleOwner.current.lifecycleScope
         return rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult()
         ) { result ->
