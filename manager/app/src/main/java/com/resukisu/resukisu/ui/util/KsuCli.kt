@@ -105,7 +105,12 @@ fun execKsud(args: String, newShell: Boolean = false): Boolean {
 }
 
 suspend fun isOfficialSignature(): Boolean = withContext(Dispatchers.IO) {
-    true
+    val shell = getRootShell()
+    val out = shell.newJob()
+        .add("${getKsuDaemonPath()} debug get-sign ${ksuApp.packageResourcePath}")
+        .to(ArrayList<String>(), null).exec().out
+    out.firstOrNull()?.trim()
+        .orEmpty() == "size: 0x339, hash: 84d7d685697c2ff0a1c1c089336783323ad9b27e26092d217d57886d4dc1485d"
 }
 
 suspend fun getFeatureStatus(feature: String): String = withContext(Dispatchers.IO) {
